@@ -15,7 +15,10 @@ export const getEmployees = async (req, res) => {
             result
         })
     } catch(e) {
-        res.send(errorResponse)
+        res.send({
+            ...errorResponse,
+            log: e.message
+        })
     }
 }
 
@@ -32,24 +35,34 @@ export const getEmployee = async (req, res) => {
             result: employeeExists ? result[0] : {}
         })
     } catch(e) {
-        res.send(errorResponse)
+        res.send({
+            ...errorResponse,
+            log: e.message
+        })
     }
 }
 
 export const createEmployee = async (req, res) => {
 
-    const {name, salary} = req.body
-    const [result] = await connection.query("INSERT INTO employee (name, salary) VALUES (?, ?)", [name, salary])
+    try {
+        const {name, salary} = req.body
+        const [result] = await connection.query("INSERT INTO employee (name, salary) VALUES (?, ?)", [name, salary])
 
-    res.send({
-        error: false,
-        message: "Usuario registrado",
-        data: {
-            id: result.insertId,
-            name,
-            salary
-        }
-    })
+        res.send({
+            error: false,
+            message: "Usuario registrado",
+            data: {
+                id: result.insertId,
+                name,
+                salary
+            }
+        })
+    } catch(e) {
+        res.send({
+            ...errorResponse,
+            log: e.message
+        })
+    }
 }
 
 export const deleteEmployee = async (req, res) => {
@@ -70,7 +83,10 @@ export const deleteEmployee = async (req, res) => {
             message,
         });
     } catch( e ) {
-        res.send(errorResponse)
+        res.send({
+            ...errorResponse,
+            log: e.message
+        })
     }
     
 }
@@ -119,6 +135,9 @@ export const updateEmployee = async (req, res) => {
         })
 
     } catch ( e ) {
-        res.send(errorResponse)
+        res.send({
+            ...errorResponse,
+            log: e.message
+        })
     }
 }
