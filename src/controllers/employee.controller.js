@@ -108,7 +108,7 @@ export const updateEmployee = async (req, res) => {
         let query = "UPDATE employee SET "
       
         Object.entries(body).forEach(([column, value], index) => {
-            query += `${column} = ${value}`
+            query += `${column} = "${value}"`
             query += (bodyProps - 1) !== index
                 ? ", "
                 : ""
@@ -122,7 +122,7 @@ export const updateEmployee = async (req, res) => {
         if ( hasUpdated ){
             const updatedUser = await connection.query("SELECT * FROM employee WHERE id = ?", [id]);
 
-            res.send({
+            return res.send({
                 error: false,
                 message: "User updated",
                 data: updatedUser[0][0]
