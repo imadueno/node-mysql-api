@@ -1,26 +1,39 @@
 import { connection } from '../database/mysql/connection.js'
 
-export const getEmployees = async (req, res) => {
-    const [result] = await connection.query('SELECT * FROM employee')
+const errorResponse = {
+    error: true,
+    message: "something went wrong",
+};
 
-    res.json({
-        error: false,
-        message: "",
-        result
-    })
+export const getEmployees = async (req, res) => {
+    try {
+        const [result] = await connection.query('SELECT * FROM employee')
+
+        res.json({
+            error: false,
+            message: "",
+            result
+        })
+    } catch(e) {
+        res.send(errorResponse)
+    }
 }
 
 export const getEmployee = async (req, res) => {
 
-    const id = req.params.id
-    const [result] = await connection.query('SELECT * FROM employee WHERE id = ?', [id])
-    const employeeExists = result.length > 0;
+    try{
+        const id = req.params.id
+        const [result] = await connection.query('SELECT * FROM employee WHERE id = ?', [id])
+        const employeeExists = result.length > 0;
 
-    res.json({
-        error: !employeeExists,
-        message: employeeExists ? "" : "No se encontró usuario",
-        result: employeeExists ? result[0] : {}
-    })
+        res.json({
+            error: !employeeExists,
+            message: employeeExists ? "" : "No se encontró usuario",
+            result: employeeExists ? result[0] : {}
+        })
+    } catch(e) {
+        res.send(errorResponse)
+    }
 }
 
 export const createEmployee = async (req, res) => {
@@ -57,10 +70,7 @@ export const deleteEmployee = async (req, res) => {
             message,
         });
     } catch( e ) {
-        res.send({
-            error: true,
-            message: `error: ${e.message}`,
-        })
+        res.send(errorResponse)
     }
     
 }
@@ -109,9 +119,6 @@ export const updateEmployee = async (req, res) => {
         })
 
     } catch ( e ) {
-        res.send({
-            error: true,
-            message: `error: ${e.message}`,
-        })
+        res.send(errorResponse)
     }
 }

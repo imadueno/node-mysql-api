@@ -6,5 +6,5 @@ import app from "./src/app.js"
 config()
 
 // init server
-app.listen(process.env.PORT)
-console.log("server listen on port ", process.env.PORT);
+app.listen(process.env.PORT || 3000)
+console.log("server listen on port", process.env.PORT || 3000);
